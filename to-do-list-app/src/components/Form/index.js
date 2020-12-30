@@ -1,145 +1,139 @@
 import "../../App.css";
-import React from "react";
+import React, { useState } from "react";
 import ListItem from "../../components/ListItem";
 import HiddenArea from "../HiddenArea";
 
-class Form extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			taskId: 1,
-			firstName: "",
-			lastName: "",
-			email: "",
-			type: "",
-			checkbox: false,
-			textArea: "",
-			showHiddenArea: false,
-			allTasks: [],
-		};
+const Form = () => {
+	const [hiddenArea, setHiddenArea] = useState(false);
 
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.createList = this.createList.bind(this);
-		this.showHiddenArea = this.showHiddenArea.bind(this);
-	}
+	const [taskId, settaskId] = useState(1);
+	const [firstName, setfirstName] = useState();
+	const [lastName, setlastName] = useState();
+	const [email, setemail] = useState();
+	const [type, settype] = useState();
+	const [checkbox, setcheckbox] = useState(false);
+	const [textArea, settextArea] = useState();
+	const [allTasks, setallTasks] = useState([]);
 
-	handleChange(event) {
-		const target = event.target;
-		const value = target.type === "checkbox" ? target.checked : target.value;
-		const name = target.name;
-		this.setState({
-			[name]: value,
-		});
-	}
-
-	createList() {
-		let newTask = this.state.allTasks;
+	const createList = () => {
+		let newTask = allTasks;
 		newTask.push({
-			id: this.state.taskId,
-			firstName: this.state.firstName,
-			lastName: this.state.lastName,
-			email: this.state.email,
-			type: this.state.type,
-			checkbox: this.state.checkbox,
-			textArea: this.state.textArea,
+			id: taskId,
+			firstName: firstName,
+			lastName: lastName,
+			email: email,
+			type: type,
+			checkbox: checkbox,
+			textArea: textArea,
 		});
-		this.setState({
-			allTasks: newTask,
-			taskId: this.state.taskId + 1,
-		});
-	}
+		setallTasks(newTask);
+		settaskId(taskId + 1);
+	};
 
-	handleSubmit(event) {
+	const handleSubmit = (event) => {
 		event.preventDefault();
-		this.createList();
-	}
+		createList();
+	};
 
-	showHiddenArea() {
-		this.setState({ showHiddenArea: !this.state.showHiddenArea });
-	}
+	const showHiddenArea = () => {
+		setHiddenArea(!hiddenArea);
+	};
 
-	render() {
-		const Items = this.state.allTasks.map((item) => (
-			<ListItem
-				key={item.firstName + item.firstName}
-				id={item.id}
-				firstName={item.firstName}
-				lastName={item.lastName}
-				email={item.email}
-				type={item.type}
-				checkbox={item.checkbox}
-				textArea={item.textArea}
-			/>
-		));
-		return (
-			<>
-				<h1>Create task</h1>
-				<form onSubmit={this.handleSubmit}>
-					<label>
-						Firs name:
-						<input type="text" name="firstName" onChange={this.handleChange} />
-					</label>
-					<br />
+	const Items = allTasks.map((item) => (
+		<ListItem
+			key={item.firstName + item.firstName}
+			id={item.id}
+			firstName={item.firstName}
+			lastName={item.lastName}
+			email={item.email}
+			type={item.type}
+			checkbox={item.checkbox}
+			textArea={item.textArea}
+		/>
+	));
 
-					<label>
-						Last name:
-						<input type="text" name="lastName" onChange={this.handleChange} />
-					</label>
-					<br />
+	return (
+		<>
+			<h1>Create task</h1>
+			<form onSubmit={handleSubmit}>
+				<label>
+					First name:
+					<input
+						type="text"
+						name="firstName"
+						onChange={(e) => setfirstName(e.target.value)}
+					/>
+				</label>
+				<br />
 
-					<label>
-						E-mail:
-						<input type="email" name="email" onChange={this.handleChange} />
-					</label>
-					<br />
+				<label>
+					Last name:
+					<input
+						type="text"
+						name="lastName"
+						onChange={(e) => setlastName(e.target.value)}
+					/>
+				</label>
+				<br />
 
-					<label>
-						Type:
-						<select name="type" onChange={this.handleChange}>
-							<option value="type1">type1</option>
-							<option value="type2">type2</option>
-							<option value="type3">type3</option>
-							<option value="type4">type4</option>
-						</select>
-					</label>
-					<br />
+				<label>
+					E-mail:
+					<input
+						type="email"
+						name="email"
+						onChange={(e) => setemail(e.target.value)}
+					/>
+				</label>
+				<br />
 
-					<label>
-						Make report:
-						<input
-							name="report"
-							type="checkbox"
-							name="checkbox"
-							onChange={this.handleChange}
-						/>
-					</label>
-					<br />
+				<label>
+					Type:
+					<select name="type" onChange={(e) => settype(e.target.value)}>
+						<option value="type1">type1</option>
+						<option value="type2">type2</option>
+						<option value="type3">type3</option>
+						<option value="type4">type4</option>
+					</select>
+				</label>
+				<br />
 
-					<label>
-						Comment:
-						<textarea onChange={this.handleChange} name="textArea" />
-					</label>
-					<br />
+				<label>
+					Make report:
+					<input
+						name="report"
+						type="checkbox"
+						name="checkbox"
+						onChange={(e) => setcheckbox(e.target.value)}
+					/>
+				</label>
+				<br />
 
-					<div className="hidden_area">
-						<p>Секретная зона</p>
-						{this.state.showHiddenArea ? <HiddenArea /> : null}
-						<div onClick={this.showHiddenArea}>
-							{this.state.showHiddenArea ? (
-								<p>Скрыть скрытую зону</p>
-							) : (
-								<p>Показать скрытую зону</p>
-							)}
-						</div>
+				<label>
+					Comment:
+					<textarea
+						onChange={(e) => settextArea(e.target.value)}
+						name="textArea"
+					/>
+				</label>
+				<br />
+
+				<div className="hidden_area">
+					<p>Секретная зона</p>
+					{hiddenArea ? <HiddenArea /> : null}
+					<div onClick={showHiddenArea}>
+						{hiddenArea ? (
+							<p>Скрыть скрытую зону</p>
+						) : (
+							<p>Показать скрытую зону</p>
+						)}
 					</div>
+				</div>
 
-					<input type="submit" value="create" />
-				</form>
-				<div>{Items}</div>
-			</>
-		);
-	}
-}
+				<input type="submit" value="create" />
+			</form>
+			<div>{Items}</div>
+		</>
+	);
+};
 
 export default Form;

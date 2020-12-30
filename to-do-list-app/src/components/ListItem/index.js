@@ -1,5 +1,6 @@
 import React from "react";
 import "../../App.css";
+import PropTypes from "prop-types";
 
 class ListItem extends React.Component {
 	render() {
@@ -16,5 +17,15 @@ class ListItem extends React.Component {
 		);
 	}
 }
+
+ListItem.propTypes = {
+	id: PropTypes.number,
+	firstName: PropTypes.string,
+	lastName: PropTypes.string,
+	email: PropTypes.string,
+	type: PropTypes.string,
+	checkbox: PropTypes.bool,
+	textArea: PropTypes.string,
+};
 
 export default ListItem;
